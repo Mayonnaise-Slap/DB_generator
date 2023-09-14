@@ -17,12 +17,12 @@ class tutor:
         name = ""
         male = bool(random.getrandbits(1))
         if male:
-            name += random.choice(list(open('ru-pnames-list/lists/male_names_rus.txt'))).strip("\n") + ' '
-            name += random.choice(list(open('ru-pnames-list/lists/male_surnames_rus.txt'))).strip('\n')
+            name += random.choice(list(open('.materials/male_names_rus.txt'))).strip("\n") + ' '
+            name += random.choice(list(open('.materials/male_surnames_rus.txt'))).strip('\n')
         else:
             end = "а"
-            name += random.choice(list(open('ru-pnames-list/lists/female_names_rus.txt'))).strip("\n") + ' '
-            name += random.choice(list(open('ru-pnames-list/lists/male_surnames_rus.txt'))).strip('\n')
+            name += random.choice(list(open('.materials/female_names_rus.txt'))).strip("\n") + ' '
+            name += random.choice(list(open('.materials/male_surnames_rus.txt'))).strip('\n')
             if name[-1] == "й":
                 end = "я"
                 name = name[:-1]
@@ -48,7 +48,6 @@ if __name__ == "__main__":
         loc = tutor()
         tutors[loc.isu] = {"name": loc.name, "phone": loc.phone,
                              "title": loc.title}
-    print(tutors)
 
-    with open("tutors.txt", "w") as outfile:
+    with open("generated/tutors.json", "w") as outfile:
         json.dump(tutors, outfile)

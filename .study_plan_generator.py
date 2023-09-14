@@ -3,7 +3,7 @@ import random
 
 
 if __name__ == "__main__":
-    with open("directions.txt") as inp:
+    with open("generated/directions.json") as inp:
         directions = json.load(inp)
 
     study_plans = {}
@@ -15,5 +15,5 @@ if __name__ == "__main__":
             study_plans[cod_op] = {"name": name, "direction_code": direction,
                                    "stydy_form": form}
 
-    with open("study_plan.txt", "w") as outfile:
+    with open("generated/study_plan.json", "w") as outfile:
         json.dump(study_plans, outfile)

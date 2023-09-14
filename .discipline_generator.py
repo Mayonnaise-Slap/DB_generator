@@ -11,5 +11,5 @@ if __name__ == "__main__":
         hours = random.randint(4, 32) * 3
         disciplines[discipline_id] = {"name": name, "hours": hours,
                                       "link": None}
-    with open("disciplines.txt", "w") as outfile:
+    with open("disciplines.json", "w") as outfile:
         json.dump(disciplines, outfile)

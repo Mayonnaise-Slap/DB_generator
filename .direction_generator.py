@@ -12,5 +12,5 @@ for direction in ["Техническая физика", "Ядерная эне�
                   "Бизнес-информатика", "Инноватика", "Информатика и вычислительная техника"]:
     directions[generate_code()] = direction
 
-with open("directions.txt", "w") as outfile:
+with open("generated/directions.json", "w") as outfile:
     json.dump(directions, outfile)
