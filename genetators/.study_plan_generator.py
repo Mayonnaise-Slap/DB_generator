@@ -1,7 +1,6 @@
 import json
 import random
 
-
 if __name__ == "__main__":
     with open("generated/directions.json") as inp:
         directions = json.load(inp)

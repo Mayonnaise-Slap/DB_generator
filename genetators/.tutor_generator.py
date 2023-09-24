@@ -8,6 +8,7 @@ class tutor:
         self.name = self.generate_name()
         self.phone = self.generate_phone()
         self.title = self.generate_title()
+
     @staticmethod
     def generate_isu():
         return random.randint(300000, 399999)
@@ -47,7 +48,7 @@ if __name__ == "__main__":
     for i in range(number):
         loc = tutor()
         tutors[loc.isu] = {"name": loc.name, "phone": loc.phone,
-                             "title": loc.title}
+                           "title": loc.title}
 
     with open("generated/tutors.json", "w") as outfile:
         json.dump(tutors, outfile)

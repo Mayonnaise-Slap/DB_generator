@@ -1,7 +1,6 @@
 import json
 import random
 
-
 if __name__ == "__main__":
     with open(".materials/disciplines.txt") as input_file:
         names = [i.strip("\n") for i in input_file.readlines()]

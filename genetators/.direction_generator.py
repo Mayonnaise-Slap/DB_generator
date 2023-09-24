@@ -1,10 +1,11 @@
-import random
 import json
+import random
 
 
 def generate_code():
     code = [random.randint(1, 50) for _ in range(3)]
     return ".".join(str(i) for i in code)
+
 
 directions = {}
 for direction in ["Техническая физика", "Ядерная энергетика и теплофизика",
