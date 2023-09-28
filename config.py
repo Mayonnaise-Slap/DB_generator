@@ -1,7 +1,7 @@
 class config:
     def __init__(self):
-        self.database = "database"
+        self.database = "timetable"
         self.user = "postgres"
-        self.password = "password"
+        self.password = "kyrlik"
         self.host = "localhost"
-        self.port = "5432"
+        self.port = "5433"
