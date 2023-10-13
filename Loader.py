@@ -12,7 +12,7 @@ def load_campus(conn):
 
     cur = conn.cursor()
     for record in data:
-        cur.execute(f"""INSERT INTO "расписание занятий"."адрес" (номер_корпуса, город, название_корпуса, алрес_корпуса) VALUES ({int(record)}, '{data[record]['city']}', '{data[record]['campus_name']}', '{data[record]['campus_adress']}')""")
+        cur.execute(f"""INSERT INTO "расписание занятий"."адрес" (номер_корпуса, город, название_корпуса, адрес_корпуса) VALUES ({int(record)}, '{data[record]['city']}', '{data[record]['campus_name']}', '{data[record]['campus_adress']}')""")
 
 
 def load_room(conn):
@@ -22,7 +22,7 @@ def load_room(conn):
     cur = conn.cursor()
     for record in data:
         cur.execute(
-            f"""INSERT INTO "расписание занятий"."кабинет" (номер_кабинета, номер_корпуса, количество_мест) VALUES ({int(record)}, '{data[record]['campus']}', '{data[record]['space']}')""")
+            f"""INSERT INTO "расписание занятий"."кабинет" (номер_кабинет, номер_корпуса, количество_мест) VALUES ({int(record)}, '{data[record]['campus']}', '{data[record]['space']}')""")
 
 
 def load_tutor(conn):
@@ -48,6 +48,7 @@ def load_student(conn):
             f"""INSERT INTO "расписание занятий"."студент" (ИСУ_студента, ФИО, телефон, номер_группы) VALUES ('{id}', '{record["name"]}', '{record["phone"]}', '{record["group"]}')"""
         )
 
+
 def direction(conn):
     with open("generated/study_plan.json") as f:
         data = json.load(f)
@@ -58,19 +59,7 @@ def direction(conn):
         if record["stydy_form"] != "Очное":
             continue
         cur.execute(
-            f"""INSERT INTO "расписание занятий"."направление подготовки" (код_направления, название) VALUES ('{record["direction_code"]}', '{record["name"]}')"""
-        )
-
-
-def load_study_plan(conn):
-    with open("generated/study_plan.json") as f:
-        data = json.load(f)
-
-    cur = conn.cursor()
-    for id in data:
-        record = data[id]
-        cur.execute(
-            f"""INSERT INTO "расписание занятий"."ОП" (код_ОП, название, код_направления, форма_обучения) VALUES ('{id}', '{record["name"]}', '{record["direction_code"]}', '{record["stydy_form"]}')"""
+            f"""INSERT INTO "расписание занятий"."направление подготовки" (код_направления, название) VALUES ('{record["direction_code"].replace(".", "")}', '{record["name"]}')"""
         )
 
 
@@ -82,8 +71,11 @@ def load_discipline(conn):
     for id in data:
         record = data[id]
         cur.execute(
-            f"""INSERT INTO "расписание занятий"."дисциплины" (код_дисциплины, название, количество_часов) VALUES ('{id}', '{record["name"]}', '{record["hours"]}')"""
+            f"""INSERT INTO "расписание занятий"."дисциплины" 
+            ("ID_дисциплины", название, количество_часов) 
+            VALUES ('{id}', '{record["name"]}', '{record["hours"]}')"""
         )
+
 
 def load_connection(conn):
     with open("generated/disciplines_in_plan.json") as f:
@@ -91,9 +83,13 @@ def load_connection(conn):
 
     cur = conn.cursor()
     for line in data:
+
         cur.execute(
-            f"""INSERT INTO "расписание занятий"."список дисциплин вУП" (код_направления, код_дисциплины, семестр_изучения) VALUES ('{line["plan_id"]}', '{line["discipline_id"]}', '{line["semester"]}')"""
+            f"""INSERT INTO "расписание занятий"."список дисциплин вУП" 
+            ("ID_направления", "ID_дисциплины", семестр_изучения) VALUES 
+            ('{line["plan_id"].replace(".", "")}', '{line["discipline_id"]}', '{line["semester"]}')"""
         )
+
 
 def load_uch_plan(conn):
     with open("generated/study_plan.json") as f:
@@ -101,8 +97,9 @@ def load_uch_plan(conn):
     cur = conn.cursor()
     for code_op in data:
         cur.execute(
-            f"""INSERT INTO "расписание занятий"."учебный план" (номер_уп, дата_набора, код_ОП) VALUES ('{random.randint(111111, 999999)}', '{datetime.datetime(random.randint(2018, 2024), 9, 1)}', '{code_op}')"""
+            f"""INSERT INTO "расписание занятий"."учебный план" (номер_УП, дата_набора, код_ОП) VALUES ('{hash(code_op)%1000000}', '{datetime.datetime(random.randint(2018, 2024), 9, 1)}', '{code_op}')"""
         )
+
 
 def load_in_group(conn):
     with open(f"generated/students.json") as f:
@@ -113,7 +110,20 @@ def load_in_group(conn):
     for student in student_data:
         year_start = random.randint(2018, 2024)
         cur.execute(
-            f"""INSERT INTO "расписание занятий"."состав группы" (номер_группы, ИСУ_студента, дата_начала, дата_окончания) VALUES ('{random.choice(groups)}', '{student}', '{datetime.datetime(year_start, 9, 1)}', '{datetime.datetime(year_start+4, 6, 30)}')"""
+            f"""INSERT INTO "расписание занятий"."состав группы" ("ID_группы", ИСУ_студента, дата_начала, дата_окончания) VALUES ('{random.choice([688977,951873,253081,222006,455220,179250
+])}', '{student}', '{datetime.datetime(year_start, 9, 1)}', '{datetime.datetime(year_start+4, 6, 30)}')"""
+        )
+
+
+def load_study_plan(conn):
+    with open("generated/study_plan.json") as f:
+        data = json.load(f)
+
+    cur = conn.cursor()
+    for id in data:
+        record = data[id]
+        cur.execute(
+            f"""INSERT INTO "расписание занятий"."ОП" ("код_ОП", название, код_направления, форма_обучения) VALUES ('{id.replace(".", "")}', '{record["name"]}', '{record["direction_code"].replace(".", "")}', '{record["stydy_form"]}')"""
         )
 
 
@@ -128,8 +138,8 @@ def load_study_group(conn):
     for group in groups:
         year_start = random.randint(2018, 2024)
         cur.execute(
-            f"""INSERT INTO "расписание занятий"."учебная группа" (номер_группы, дата_формирование, дата_расформирование, код_ОП)
-             VALUES ('{group}', '{datetime.datetime(year_start, 9, 1)}', '{datetime.datetime(year_start+4, 6, 30)}', '{random.choice(list(plans))}')"""
+            f"""INSERT INTO "расписание занятий"."учебная группа" ("ID_группы", номер_группы, дата_формирование, дата_расформирование, код_УП)
+             VALUES ('{hash(group)%1000000}', '{group}', '{datetime.datetime(year_start, 9, 1)}', '{datetime.datetime(year_start+4, 6, 30)}', '{hash(random.choice(list(plans)))%1000000}')"""
         )
 
 
@@ -146,24 +156,16 @@ def load_timetable(conn):
         discipline_ids = list(json.load(f))
     cur = conn.cursor()
 
-    lesson_index = 1001
-    # print(random.choice(groups))
-    # print(random.choice(cabinets))
-    # print(random.choice(tutor_ids))
-    # print(random.choice(discipline_ids))
-    # print(random.choice(types))
-
     for _ in range(10000):
         time = random.choice(times)
         year = random.randint(2021, 2024)
         cur.execute(
             f"""INSERT INTO "расписание занятий"."расписание"
-             (lesson_id, номер_группы, номер_кабинет, учебный_год, ИСУ_преподаватель, код_дисциплины, время_начала, время_окончания, дата_проведения, вид_занятия)
-            VALUES ('{lesson_index}', '{random.choice(groups)}','{random.choice(cabinets)}','{datetime.date(year, 9, 1)}','{random.choice(tutor_ids)}',
+             (номер_группы, номер_кабинет, учебный_год, ИСУ_преподаватель, "ID_дисциплины", время_начала, время_окончания, дата_проведения, вид_занятия)
+            VALUES ('{random.choice([688977,951873,253081,222006,455220,179250])}','{random.choice(cabinets)}','{datetime.date(year, 9, 1)}','{random.choice(tutor_ids)}',
             '{random.choice(discipline_ids)}', '{datetime.time(time[0], time[1])}','{(datetime.datetime(year = 1, month=1, day=1, hour=time[0], minute=time[1]) + datetime.timedelta(minutes=90)).time()}',
             '{datetime.datetime(year, random.randint(1, 12), random.randint(1,28))}', '{random.choice(types)}')"""
         )
-        lesson_index += 1
 
 
 if __name__ == "__main__":
